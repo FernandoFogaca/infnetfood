@@ -14,6 +14,7 @@ import ConfigScreen from "./screens/ConfigScreen";
 import CheckoutScreen from "./screens/CheckoutScreen";
 import RestaurantDetailScreen from "./screens/RestaurantDetailScreen";
 import RestaurantScreen from "./screens/RestaurantScreen";
+import LoginScreen from "./screens/LoginScreen"; 
 
 // ==== CONTEXTO DO APP ====
 const AppContext = createContext();
@@ -25,8 +26,6 @@ const Stack = createNativeStackNavigator();
 // ==== Tabs principais ====
 function MainTabs() {
   const { carrinho } = useApp();
-
-  // soma todas as quantidades dos itens no carrinho
   const totalItens = carrinho.reduce((acc, item) => acc + (item.qtd || 1), 0);
 
   return (
@@ -50,28 +49,11 @@ function MainTabs() {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen
-        name="Snacks"
-        component={ProductsScreen}
-        initialParams={{ category: "Snacks" }}
-      />
-      <Tab.Screen
-        name="Combos"
-        component={ProductsScreen}
-        initialParams={{ category: "Combos" }}
-      />
-      <Tab.Screen
-        name="Drinks"
-        component={ProductsScreen}
-        initialParams={{ category: "Drinks" }}
-      />
-      <Tab.Screen
-        name="Desserts"
-        component={ProductsScreen}
-        initialParams={{ category: "Desserts" }}
-      />
+      <Tab.Screen name="Snacks" component={ProductsScreen} initialParams={{ category: "Snacks" }} />
+      <Tab.Screen name="Combos" component={ProductsScreen} initialParams={{ category: "Combos" }} />
+      <Tab.Screen name="Drinks" component={ProductsScreen} initialParams={{ category: "Drinks" }} />
+      <Tab.Screen name="Desserts" component={ProductsScreen} initialParams={{ category: "Desserts" }} />
       <Tab.Screen name="Restaurantes" component={RestaurantScreen} />
-
       <Tab.Screen
         name="Carrinho"
         component={CartScreen}
@@ -79,7 +61,6 @@ function MainTabs() {
           tabBarBadge: totalItens > 0 ? totalItens : null,
         }}
       />
-
       <Tab.Screen name="Pedidos" component={OrdersScreen} />
       <Tab.Screen name="Perfil" component={ProfileScreen} />
       <Tab.Screen name="Configurações" component={ConfigScreen} />
@@ -93,13 +74,24 @@ export default function App() {
   const [pedidos, setPedidos] = useState([]);
   const [tema, setTema] = useState("light");
 
+  // 👇 controle de login
+  const [usuario, setUsuario] = useState(null);
+
   return (
     <AppContext.Provider value={{ carrinho, setCarrinho, pedidos, setPedidos, tema, setTema }}>
       <NavigationContainer theme={tema === "dark" ? DarkTheme : DefaultTheme}>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Principal" component={MainTabs} />
-          <Stack.Screen name="Checkout" component={CheckoutScreen} />
-          <Stack.Screen name="RestaurantDetail" component={RestaurantDetailScreen} />
+          {usuario ? (
+            <>
+              <Stack.Screen name="Principal" component={MainTabs} />
+              <Stack.Screen name="Checkout" component={CheckoutScreen} />
+              <Stack.Screen name="RestaurantDetail" component={RestaurantDetailScreen} />
+            </>
+          ) : (
+            <Stack.Screen name="Login">
+              {() => <LoginScreen onLogin={() => setUsuario({ nome: "Usuário" })} />}
+            </Stack.Screen>
+          )}
         </Stack.Navigator>
       </NavigationContainer>
     </AppContext.Provider>
