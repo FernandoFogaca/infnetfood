@@ -17,9 +17,9 @@ The project simulates a food delivery service with products, shopping cart, orde
 - ✅ Checkout flow with confirmation  
 
 <p float="left">
-  <img src="./inf1.jpeg" width="300" />
-  <img src="./inf2.jpeg" width="300" />
-  <img src="./inf3.jpeg" width="300" />
+  <img src="./assets/inf1.jpeg" width="300" />
+  <img src="./assets/inf2.jpeg" width="300" />
+  <img src="./assets/inf3.jpeg" width="300" />
 </p>
 
 ---
@@ -43,9 +43,9 @@ O projeto simula um serviço de delivery com produtos, carrinho de compras, pedi
 - ✅ Fluxo de checkout com confirmação  
 
 <p float="left">
-  <img src="./inf4.jpeg" width="300" />
-  <img src="./inf5.jpeg" width="300" />
-  <img src="./inf6.jpeg" width="300" />
+  <img src="./assets/inf4.jpeg" width="300" />
+  <img src="./assets/inf5.jpeg" width="300" />
+  <img src="./assets/inf6.jpeg" width="300" />
 </p>
 
 ---
