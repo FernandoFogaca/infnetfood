@@ -1,4 +1,3 @@
-
 import React from "react";
 import { View, Text, FlatList, Pressable, StyleSheet, Image } from "react-native";
 import { useApp } from "../App";
@@ -31,7 +30,16 @@ export default function ProductsScreen({ route }) {
   const isDark = tema === "dark";
 
   const addCarrinho = (produto) => {
-    setCarrinho([...carrinho, produto]);
+    const existente = carrinho.find((p) => p.id === produto.id);
+    if (existente) {
+      setCarrinho(
+        carrinho.map((p) =>
+          p.id === produto.id ? { ...p, qtd: (p.qtd || 1) + 1 } : p
+        )
+      );
+    } else {
+      setCarrinho([...carrinho, { ...produto, qtd: 1 }]);
+    }
   };
 
   return (

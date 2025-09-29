@@ -1,4 +1,3 @@
-
 import React from "react";
 import { View, Text, StyleSheet, Pressable, Alert } from "react-native";
 import { useApp } from "../App";
@@ -7,7 +6,11 @@ export default function CheckoutScreen({ navigation }) {
   const { carrinho, setCarrinho, pedidos, setPedidos, tema } = useApp();
   const isDark = tema === "dark";
 
-  const total = carrinho.reduce((acc, item) => acc + item.preco * (item.quantidade || 1), 0);
+  // 🔥 padronizado para usar "qtd"
+  const total = carrinho.reduce(
+    (acc, item) => acc + item.preco * (item.qtd || 1),
+    0
+  );
 
   const confirmarPedido = () => {
     if (carrinho.length === 0) {
@@ -15,8 +18,18 @@ export default function CheckoutScreen({ navigation }) {
       return;
     }
 
-    // adiciona pedido aos pedidos
-    setPedidos([...pedidos, { itens: carrinho, total }]);
+    // adiciona pedido com ID único
+    setPedidos([
+      ...pedidos,
+      {
+        id: Date.now().toString(),
+        itens: carrinho,
+        total,
+        data: new Date().toLocaleString(), // opcional: mostrar data/hora
+      },
+    ]);
+
+    // limpa carrinho
     setCarrinho([]);
 
     Alert.alert("Sucesso", "Pedido realizado com sucesso!");
@@ -24,8 +37,15 @@ export default function CheckoutScreen({ navigation }) {
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: isDark ? "#111" : "#fff" }]}>
-      <Text style={[styles.title, { color: isDark ? "#fff" : "#000" }]}>Checkout</Text>
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: isDark ? "#111" : "#fff" },
+      ]}
+    >
+      <Text style={[styles.title, { color: isDark ? "#fff" : "#000" }]}>
+        Checkout
+      </Text>
       <Text style={[styles.total, { color: isDark ? "#fff" : "#000" }]}>
         Total: €{total.toFixed(2)}
       </Text>

@@ -1,35 +1,31 @@
 import React from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import { View, Text, FlatList, Image, Pressable, StyleSheet } from "react-native";
+import { useApp } from "../App";
+import { restaurantes } from "./RestaurantDetailScreen"; 
 
-export default function RestaurantScreen() {
-  const restaurante = {
-    nome: "Dutch Bites Amsterdam",
-    endereco: "Damrak 32, Amsterdam, NL",
-    descricao: "Comida holandesa típica servida com carinho. Experimente os melhores lanches de Amsterdã!",
-    cardapio: [
-      { id: "1", nome: "Kroket", preco: 3.5 },
-      { id: "2", nome: "Bitterballen", preco: 5.0 },
-      { id: "3", nome: "Frikandel", preco: 4.0 },
-      { id: "4", nome: "Stroopwafel", preco: 2.5 },
-    ],
-  };
+export default function RestaurantScreen({ navigation }) {
+  const { tema } = useApp();
+  const isDark = tema === "dark";
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{restaurante.nome}</Text>
-      <Text style={styles.endereco}>{restaurante.endereco}</Text>
-      <Text style={styles.descricao}>{restaurante.descricao}</Text>
-
-      <Text style={styles.subtitle}>Cardápio</Text>
+    <View style={[styles.container, { backgroundColor: isDark ? "#111" : "#eee" }]}>
       <FlatList
-        data={restaurante.cardapio}
-        keyExtractor={(item) => item.id}
+        data={restaurantes}
+        keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
-          <View style={styles.card}>
-            <Text style={styles.cardText}>
-              {item.nome} - €{item.preco.toFixed(2)}
-            </Text>
-          </View>
+          <Pressable
+            style={[styles.card, { backgroundColor: isDark ? "#222" : "#fff" }]}
+            onPress={() => navigation.navigate("RestaurantDetail", { restaurant: item })}
+          >
+            <Image source={{ uri: item.imagem }} style={styles.image} />
+            <View style={styles.info}>
+              <Text style={[styles.name, { color: isDark ? "#fff" : "#000" }]}>{item.nome}</Text>
+              <Text style={[styles.address, { color: isDark ? "#bbb" : "#555" }]}>{item.endereco}</Text>
+              <Text style={[styles.desc, { color: isDark ? "#ddd" : "#333" }]} numberOfLines={2}>
+                {item.descricao}
+              </Text>
+            </View>
+          </Pressable>
         )}
       />
     </View>
@@ -37,16 +33,17 @@ export default function RestaurantScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "white", padding: 16 },
-  title: { fontSize: 22, fontWeight: "bold", marginBottom: 4 },
-  endereco: { fontSize: 14, color: "gray", marginBottom: 8 },
-  descricao: { fontSize: 16, marginBottom: 16 },
-  subtitle: { fontSize: 18, fontWeight: "bold", marginBottom: 8 },
+  container: { flex: 1, padding: 10 },
   card: {
-    padding: 14,
-    marginBottom: 10,
-    backgroundColor: "lightsteelblue",
-    borderRadius: 8,
+    flexDirection: "row",
+    marginBottom: 12,
+    borderRadius: 10,
+    overflow: "hidden",
+    elevation: 2,
   },
-  cardText: { fontSize: 16, fontWeight: "500" },
+  image: { width: 100, height: 100 },
+  info: { flex: 1, padding: 10 },
+  name: { fontSize: 18, fontWeight: "bold" },
+  address: { fontSize: 14, marginTop: 2 },
+  desc: { fontSize: 13, marginTop: 4 },
 });

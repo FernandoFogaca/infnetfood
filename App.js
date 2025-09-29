@@ -1,4 +1,3 @@
-// App.js
 import React, { useState, createContext, useContext } from "react";
 import { NavigationContainer, DefaultTheme, DarkTheme } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -12,9 +11,9 @@ import CartScreen from "./screens/CartScreen";
 import OrdersScreen from "./screens/OrdersScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import ConfigScreen from "./screens/ConfigScreen";
-import MapScreen from "./screens/MapScreen";
 import CheckoutScreen from "./screens/CheckoutScreen";
 import RestaurantDetailScreen from "./screens/RestaurantDetailScreen";
+import RestaurantScreen from "./screens/RestaurantScreen";
 
 // ==== CONTEXTO DO APP ====
 const AppContext = createContext();
@@ -25,6 +24,11 @@ const Stack = createNativeStackNavigator();
 
 // ==== Tabs principais ====
 function MainTabs() {
+  const { carrinho } = useApp();
+
+  // soma todas as quantidades dos itens no carrinho
+  const totalItens = carrinho.reduce((acc, item) => acc + (item.qtd || 1), 0);
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -34,11 +38,12 @@ function MainTabs() {
           else if (route.name === "Snacks") iconName = "fast-food";
           else if (route.name === "Drinks") iconName = "beer";
           else if (route.name === "Desserts") iconName = "ice-cream";
-          else if (route.name === "Combos") iconName = "restaurant";
-          else if (route.name === "Mapa") iconName = "map";
+          else if (route.name === "Combos") iconName = "restaurant-outline";
+          else if (route.name === "Restaurantes") iconName = "map";
           else if (route.name === "Carrinho") iconName = "cart";
           else if (route.name === "Pedidos") iconName = "cube";
           else if (route.name === "Perfil") iconName = "person";
+          else if (route.name === "Configurações") iconName = "settings";
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         headerShown: false,
@@ -51,6 +56,11 @@ function MainTabs() {
         initialParams={{ category: "Snacks" }}
       />
       <Tab.Screen
+        name="Combos"
+        component={ProductsScreen}
+        initialParams={{ category: "Combos" }}
+      />
+      <Tab.Screen
         name="Drinks"
         component={ProductsScreen}
         initialParams={{ category: "Drinks" }}
@@ -60,15 +70,19 @@ function MainTabs() {
         component={ProductsScreen}
         initialParams={{ category: "Desserts" }}
       />
+      <Tab.Screen name="Restaurantes" component={RestaurantScreen} />
+
       <Tab.Screen
-        name="Combos"
-        component={ProductsScreen}
-        initialParams={{ category: "Combos" }}
+        name="Carrinho"
+        component={CartScreen}
+        options={{
+          tabBarBadge: totalItens > 0 ? totalItens : null,
+        }}
       />
-      <Tab.Screen name="Mapa" component={MapScreen} />
-      <Tab.Screen name="Carrinho" component={CartScreen} />
+
       <Tab.Screen name="Pedidos" component={OrdersScreen} />
       <Tab.Screen name="Perfil" component={ProfileScreen} />
+      <Tab.Screen name="Configurações" component={ConfigScreen} />
     </Tab.Navigator>
   );
 }
@@ -83,12 +97,8 @@ export default function App() {
     <AppContext.Provider value={{ carrinho, setCarrinho, pedidos, setPedidos, tema, setTema }}>
       <NavigationContainer theme={tema === "dark" ? DarkTheme : DefaultTheme}>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-          {/* Tabs SEMPRE ativas */}
           <Stack.Screen name="Principal" component={MainTabs} />
-
-          {/* Extras que abrem em cima das tabs */}
           <Stack.Screen name="Checkout" component={CheckoutScreen} />
-          <Stack.Screen name="Configurações" component={ConfigScreen} />
           <Stack.Screen name="RestaurantDetail" component={RestaurantDetailScreen} />
         </Stack.Navigator>
       </NavigationContainer>

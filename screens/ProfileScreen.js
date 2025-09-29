@@ -1,82 +1,77 @@
-// screens/ProductsScreen.js
 import React from "react";
-import { View, Text, StyleSheet, FlatList, Pressable } from "react-native";
+import { View, Text, StyleSheet, Image, Pressable } from "react-native";
 import { useApp } from "../App";
 
-export default function ProductsScreen({ route }) {
-  const { category } = route.params;
-  const { carrinho, setCarrinho, tema } = useApp();
+export default function ProfileScreen({ navigation }) {
+  const { tema } = useApp();
   const isDark = tema === "dark";
 
-  // Produtos de exemplo
-  const produtosMock = {
-    Snacks: [
-      { nome: "Kroket", preco: 4 },
-      { nome: "Frikandel", preco: 3.5 },
-      { nome: "Bitterballen", preco: 5 },
-    ],
-    Drinks: [
-      { nome: "Heineken", preco: 4 },
-      { nome: "Café Holandês", preco: 3 },
-      { nome: "Chocomel", preco: 3.5 },
-    ],
-    Desserts: [
-      { nome: "Stroopwafel", preco: 2 },
-      { nome: "Appeltaart", preco: 4 },
-      { nome: "Vla", preco: 3 },
-    ],
-    Combos: [
-      { nome: "Combo Amsterdam", preco: 15 },
-      { nome: "Combo Rotterdam", preco: 18 },
-    ],
-  };
-
-  const produtos = produtosMock[category] || [];
-
-  const addToCart = (item) => {
-    setCarrinho([...carrinho, item]);
-  };
-
   return (
-    <View style={[styles.container, { backgroundColor: isDark ? "#111" : "#fff" }]}>
-      <Text style={[styles.title, { color: isDark ? "#fff" : "#000" }]}>{category}</Text>
-
-      <FlatList
-        data={produtos}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
-          <View style={[styles.card, { backgroundColor: isDark ? "#222" : "#f9f9f9" }]}>
-            <Text style={[styles.name, { color: isDark ? "#fff" : "#000" }]}>{item.nome}</Text>
-            <Text style={[styles.price, { color: isDark ? "#ccc" : "#333" }]}>€{item.preco.toFixed(2)}</Text>
-            <Pressable style={styles.button} onPress={() => addToCart(item)}>
-              <Text style={styles.buttonText}>Adicionar</Text>
-            </Pressable>
-          </View>
-        )}
+    <View
+      style={[
+        styles.container,
+        { backgroundColor: isDark ? "#111" : "#fff" },
+      ]}
+    >
+   
+      <Image
+        source={{
+          uri: "https://st2.depositphotos.com/1007566/12301/v/450/depositphotos_123013306-stock-illustration-avatar-man-cartoon.jpg",
+        }}
+        style={styles.avatar}
       />
+
+      
+      <Text style={[styles.name, { color: isDark ? "#fff" : "#000" }]}>
+        Fernando Fogaca
+      </Text>
+      <Text style={[styles.email, { color: isDark ? "#ccc" : "#333" }]}>
+        fernando@email.com
+      </Text>
+
+   
+      <Pressable
+        style={styles.button}
+        onPress={() => navigation.navigate("Configurações")}
+      >
+        <Text style={styles.buttonText}>⚙️ Configurações</Text>
+      </Pressable>
+
+      <Pressable
+        style={styles.button}
+        onPress={() => navigation.navigate("Pedidos")}
+      >
+        <Text style={styles.buttonText}>📦 Meus Pedidos</Text>
+      </Pressable>
+
+      <Pressable
+        style={styles.button}
+        onPress={() => alert("Logout realizado com sucesso!")}
+      >
+        <Text style={styles.buttonText}>🚪 Sair</Text>
+      </Pressable>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16 },
-  title: { fontSize: 24, fontWeight: "bold", marginBottom: 20, textAlign: "center" },
-  card: {
-    padding: 16,
-    borderRadius: 10,
-    marginBottom: 16,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 6,
-    elevation: 3,
+  container: { flex: 1, alignItems: "center", padding: 20 },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 20,
+    marginTop: 40,
   },
-  name: { fontSize: 18, fontWeight: "bold" },
-  price: { fontSize: 16, marginVertical: 8 },
+  name: { fontSize: 22, fontWeight: "bold", marginBottom: 6 },
+  email: { fontSize: 16, marginBottom: 20 },
   button: {
     backgroundColor: "steelblue",
-    padding: 10,
+    padding: 14,
     borderRadius: 8,
+    width: "80%",
     alignItems: "center",
+    marginBottom: 12,
   },
-  buttonText: { color: "#fff", fontWeight: "bold" },
+  buttonText: { color: "#fff", fontSize: 16, fontWeight: "bold" },
 });
