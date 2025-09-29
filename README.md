@@ -16,7 +16,9 @@ The project simulates a food delivery service with products, shopping cart, orde
 - 🗺️ Delivery region map with restaurants  
 - ✅ Checkout flow with confirmation  
 
----
+---![inf2](https://github.com/user-attachments/assets/690dfe8a-cbaa-45a4-8f84-b580f27afea2)
+![inf1](https://github.com/user-attachments/assets/28152e45-87e6-4ce3-9476-a1e496fa2c24)
+
 
 
 ### Português
